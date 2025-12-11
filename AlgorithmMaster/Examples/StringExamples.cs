@@ -107,7 +107,7 @@ namespace AlgorithmMaster.Examples
             foreach (string pattern in patterns)
             {
                 bool matches = StringTemplate.IsMatch(input, pattern);
-                Console.WriteLine($"\"{input}\" matches pattern \"{pattern}\": {matches}\");
+                Console.WriteLine($\"\"{input}\" matches pattern \"{pattern}\": {matches}\");
             }
 
             Console.WriteLine();
