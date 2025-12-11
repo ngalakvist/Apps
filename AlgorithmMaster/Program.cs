@@ -21,13 +21,13 @@ namespace AlgorithmMaster
                 ["Array Examples"] = ArrayExamples.RunAll,
                 ["String Examples"] = StringExamples.RunAll,
                 ["HashMap Examples"] = HashMapExamples.RunAll,
-                ["Two Pointers Examples"] = TwoPointersExamples.RunAll,
-                ["Sliding Window Examples"] = SlidingWindowExamples.RunAll,
-                ["Binary Search Examples"] = BinarySearchExamples.RunAll,
-                ["BFS Examples"] = BFSExamples.RunAll,
-                ["DFS Examples"] = DFSExamples.RunAll,
-                ["Backtracking Examples"] = BacktrackingExamples.RunAll,
-                ["Priority Queue Examples"] = PriorityQueueExamples.RunAll,
+                //["Two Pointers Examples"] = TwoPointersExamples.RunAll,
+                //["Sliding Window Examples"] = SlidingWindowExamples.RunAll,
+                //["Binary Search Examples"] = BinarySearchExamples.RunAll,
+                //["BFS Examples"] = BFSExamples.RunAll,
+                //["DFS Examples"] = DFSExamples.RunAll,
+                //["Backtracking Examples"] = BacktrackingExamples.RunAll,
+                //["Priority Queue Examples"] = PriorityQueueExamples.RunAll,
                 ["Performance Profiling"] = PerformanceProfiler.RunPerformanceTests
             };
 

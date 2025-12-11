@@ -93,11 +93,11 @@ namespace AlgorithmMaster.Utils
                 int[] testArray = AlgorithmUtils.GenerateRandomArray(size, 0, size);
 
                 // Built-in sort (for reference)
-                TestRunner.RunPerformanceTest($"Built-in Sort (size {size})", () => { int[] arr = (int[])testArray.Clone(); Array.Sort(arr); }, 100);
+                // TestRunner.RunPerformanceTest($"Built-in Sort (size {size})", () => { int[] arr = (int[])testArray.Clone(); Array.Sort(arr); }, 100);
 
                 // Merge Sort (Two Pointers template)
-                TestRunner.RunPerformanceTest($"Merge Sort (size {size})",
-                    () => { int[] arr = (int[])testArray.Clone(); TwoPointersTemplate.MergeSort(arr, 0, arr.Length - 1); }, 10);
+                //TestRunner.RunPerformanceTest($"Merge Sort (size {size})",
+                //() => { int[] arr = (int[])testArray.Clone(); TwoPointersTemplate.MergeSort(arr, 0, arr.Length - 1); }, 10);
 
                 Console.WriteLine();
             }

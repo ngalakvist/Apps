@@ -1,6 +1,6 @@
+using AlgorithmMaster.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AlgorithmMaster.Templates
 {
@@ -13,7 +13,7 @@ namespace AlgorithmMaster.Templates
         // ========================================
         // OPPOSITE POINTERS (FROM BOTH ENDS)
         // ========================================
-        
+
         /// <summary>
         /// Template for two pointers from opposite ends
         /// Classic pattern: sorted array problems
@@ -23,11 +23,11 @@ namespace AlgorithmMaster.Templates
         {
             int left = 0;
             int right = nums.Length - 1;
-            
+
             while (left < right)
             {
                 int sum = nums[left] + nums[right];
-                
+
                 if (sum == target)
                 {
                     return new int[] { left, right };
@@ -41,10 +41,10 @@ namespace AlgorithmMaster.Templates
                     right--; // Need smaller sum
                 }
             }
-            
+
             return new int[0]; // Not found
         }
-        
+
         /// <summary>
         /// Template for valid palindrome check
         /// Time: O(n), Space: O(1)
@@ -53,23 +53,23 @@ namespace AlgorithmMaster.Templates
         {
             int left = 0;
             int right = s.Length - 1;
-            
+
             while (left < right)
             {
                 // Skip non-alphanumeric characters
                 while (left < right && !char.IsLetterOrDigit(s[left])) left++;
                 while (left < right && !char.IsLetterOrDigit(s[right])) right--;
-                
+
                 if (char.ToLower(s[left]) != char.ToLower(s[right]))
                     return false;
-                    
+
                 left++;
                 right--;
             }
-            
+
             return true;
         }
-        
+
         /// <summary>
         /// Template for container with most water
         /// Time: O(n), Space: O(1)
@@ -79,15 +79,15 @@ namespace AlgorithmMaster.Templates
             int left = 0;
             int right = height.Length - 1;
             int maxArea = 0;
-            
+
             while (left < right)
             {
                 int width = right - left;
                 int minHeight = Math.Min(height[left], height[right]);
                 int area = width * minHeight;
-                
+
                 maxArea = Math.Max(maxArea, area);
-                
+
                 // Move the pointer with smaller height
                 if (height[left] < height[right])
                 {
@@ -98,14 +98,14 @@ namespace AlgorithmMaster.Templates
                     right--;
                 }
             }
-            
+
             return maxArea;
         }
-        
+
         // ========================================
         // SAME DIRECTION POINTERS (SLOW/FAST)
         // ========================================
-        
+
         /// <summary>
         /// Template for removing duplicates from sorted array
         /// Time: O(n), Space: O(1)
@@ -113,9 +113,9 @@ namespace AlgorithmMaster.Templates
         public static int RemoveDuplicates(int[] nums)
         {
             if (nums.Length == 0) return 0;
-            
+
             int slow = 0; // Position to place the next unique element
-            
+
             for (int fast = 1; fast < nums.Length; fast++)
             {
                 if (nums[fast] != nums[slow])
@@ -124,10 +124,10 @@ namespace AlgorithmMaster.Templates
                     nums[slow] = nums[fast];
                 }
             }
-            
+
             return slow + 1; // Length of unique elements
         }
-        
+
         /// <summary>
         /// Template for removing element from array
         /// Time: O(n), Space: O(1)
@@ -135,7 +135,7 @@ namespace AlgorithmMaster.Templates
         public static int RemoveElement(int[] nums, int val)
         {
             int slow = 0; // Position to place the next non-val element
-            
+
             for (int fast = 0; fast < nums.Length; fast++)
             {
                 if (nums[fast] != val)
@@ -144,10 +144,10 @@ namespace AlgorithmMaster.Templates
                     slow++;
                 }
             }
-            
+
             return slow; // Length of elements not equal to val
         }
-        
+
         /// <summary>
         /// Template for finding first missing positive
         /// Time: O(n), Space: O(1)
@@ -155,7 +155,7 @@ namespace AlgorithmMaster.Templates
         public static int FirstMissingPositive(int[] nums)
         {
             int n = nums.Length;
-            
+
             // Place each number in its correct position
             for (int i = 0; i < n; i++)
             {
@@ -167,21 +167,21 @@ namespace AlgorithmMaster.Templates
                     nums[i] = temp;
                 }
             }
-            
+
             // Find the first missing positive
             for (int i = 0; i < n; i++)
             {
                 if (nums[i] != i + 1)
                     return i + 1;
             }
-            
+
             return n + 1;
         }
-        
+
         // ========================================
         // FAST/SLOW POINTERS (CYCLE DETECTION)
         // ========================================
-        
+
         /// <summary>
         /// Template for detecting cycle in linked list
         /// Time: O(n), Space: O(1)
@@ -189,21 +189,21 @@ namespace AlgorithmMaster.Templates
         public static bool HasCycle(ListNode head)
         {
             if (head == null || head.Next == null) return false;
-            
+
             ListNode slow = head;
             ListNode fast = head.Next;
-            
+
             while (fast != null && fast.Next != null)
             {
                 if (slow == fast) return true;
-                
+
                 slow = slow.Next;
                 fast = fast.Next.Next;
             }
-            
+
             return false;
         }
-        
+
         /// <summary>
         /// Template for finding cycle start in linked list
         /// Time: O(n), Space: O(1)
@@ -211,26 +211,26 @@ namespace AlgorithmMaster.Templates
         public static ListNode DetectCycle(ListNode head)
         {
             if (head == null || head.Next == null) return null;
-            
+
             // Phase 1: Detect cycle
             ListNode slow = head;
             ListNode fast = head;
             bool hasCycle = false;
-            
+
             while (fast != null && fast.Next != null)
             {
                 slow = slow.Next;
                 fast = fast.Next.Next;
-                
+
                 if (slow == fast)
                 {
                     hasCycle = true;
                     break;
                 }
             }
-            
+
             if (!hasCycle) return null;
-            
+
             // Phase 2: Find cycle start
             slow = head;
             while (slow != fast)
@@ -238,10 +238,10 @@ namespace AlgorithmMaster.Templates
                 slow = slow.Next;
                 fast = fast.Next;
             }
-            
+
             return slow;
         }
-        
+
         /// <summary>
         /// Template for finding middle of linked list
         /// Time: O(n), Space: O(1)
@@ -250,20 +250,20 @@ namespace AlgorithmMaster.Templates
         {
             ListNode slow = head;
             ListNode fast = head;
-            
+
             while (fast != null && fast.Next != null)
             {
                 slow = slow.Next;
                 fast = fast.Next.Next;
             }
-            
+
             return slow;
         }
-        
+
         // ========================================
         // THREE POINTERS PATTERN
         // ========================================
-        
+
         /// <summary>
         /// Template for 3Sum problem
         /// Time: O(n²), Space: O(1) or O(n) for result
@@ -272,26 +272,26 @@ namespace AlgorithmMaster.Templates
         {
             IList<IList<int>> result = new List<IList<int>>();
             Array.Sort(nums);
-            
+
             for (int i = 0; i < nums.Length - 2; i++)
             {
                 if (i > 0 && nums[i] == nums[i - 1]) continue; // Skip duplicates
-                
+
                 int left = i + 1;
                 int right = nums.Length - 1;
-                
+
                 while (left < right)
                 {
                     int sum = nums[i] + nums[left] + nums[right];
-                    
+
                     if (sum == 0)
                     {
                         result.Add(new List<int> { nums[i], nums[left], nums[right] });
-                        
+
                         // Skip duplicates
                         while (left < right && nums[left] == nums[left + 1]) left++;
                         while (left < right && nums[right] == nums[right - 1]) right--;
-                        
+
                         left++;
                         right--;
                     }
@@ -305,10 +305,10 @@ namespace AlgorithmMaster.Templates
                     }
                 }
             }
-            
+
             return result;
         }
-        
+
         /// <summary>
         /// Template for sorting colors (Dutch National Flag)
         /// Time: O(n), Space: O(1)
@@ -318,7 +318,7 @@ namespace AlgorithmMaster.Templates
             int left = 0;     // Position for 0s
             int right = nums.Length - 1; // Position for 2s
             int current = 0;  // Current element being examined
-            
+
             while (current <= right)
             {
                 if (nums[current] == 0)
@@ -338,11 +338,11 @@ namespace AlgorithmMaster.Templates
                 }
             }
         }
-        
+
         // ========================================
         // MERGE WITH TWO POINTERS
         // ========================================
-        
+
         /// <summary>
         /// Template for merging two sorted arrays
         /// Time: O(m + n), Space: O(m + n)
@@ -351,7 +351,7 @@ namespace AlgorithmMaster.Templates
         {
             int[] result = new int[nums1.Length + nums2.Length];
             int i = 0, j = 0, k = 0;
-            
+
             while (i < nums1.Length && j < nums2.Length)
             {
                 if (nums1[i] <= nums2[j])
@@ -363,20 +363,20 @@ namespace AlgorithmMaster.Templates
                     result[k++] = nums2[j++];
                 }
             }
-            
+
             while (i < nums1.Length)
             {
                 result[k++] = nums1[i++];
             }
-            
+
             while (j < nums2.Length)
             {
                 result[k++] = nums2[j++];
             }
-            
+
             return result;
         }
-        
+
         /// <summary>
         /// Template for merge sort using two pointers
         /// Time: O(n log n), Space: O(n)
@@ -386,18 +386,18 @@ namespace AlgorithmMaster.Templates
             if (left < right)
             {
                 int mid = left + (right - left) / 2;
-                
+
                 MergeSort(nums, left, mid);
                 MergeSort(nums, mid + 1, right);
                 Merge(nums, left, mid, right);
             }
         }
-        
+
         private static void Merge(int[] nums, int left, int mid, int right)
         {
             int[] temp = new int[right - left + 1];
             int i = left, j = mid + 1, k = 0;
-            
+
             while (i <= mid && j <= right)
             {
                 if (nums[i] <= nums[j])
@@ -409,34 +409,34 @@ namespace AlgorithmMaster.Templates
                     temp[k++] = nums[j++];
                 }
             }
-            
+
             while (i <= mid)
             {
                 temp[k++] = nums[i++];
             }
-            
+
             while (j <= right)
             {
                 temp[k++] = nums[j++];
             }
-            
+
             for (int p = 0; p < temp.Length; p++)
             {
                 nums[left + p] = temp[p];
             }
         }
-        
+
         // ========================================
         // HELPER METHODS
         // ========================================
-        
+
         private static void Swap(int[] nums, int i, int j)
         {
             int temp = nums[i];
             nums[i] = nums[j];
             nums[j] = temp;
         }
-        
+
         public static void PrintPointers(int[] nums, int left, int right, string message = "")
         {
             Console.WriteLine($"{message}");
@@ -444,7 +444,7 @@ namespace AlgorithmMaster.Templates
             Console.WriteLine($"  Left: {left} (value: {nums[left]}), Right: {right} (value: {nums[right]})");
             Console.WriteLine();
         }
-        
+
         public static void PrintPointers(int[] nums, int slow, int fast, int current, string message = "")
         {
             Console.WriteLine($"{message}");
