@@ -1,0 +1,16 @@
+FROM registry.access.redhat.com/ubi8/dotnet-60 AS build
+USER root
+WORKDIR /source
+
+COPY . .
+WORKDIR /source/BoilerPlate
+RUN dotnet publish -c release -o /app
+
+# final stage/image
+FROM registry.access.redhat.com/ubi8/dotnet-60
+USER root
+COPY ca-bundle.crt /etc/pki/ca-trust/source/anchors
+RUN update-ca-trust force-enable
+WORKDIR /app
+COPY --from=build /app ./
+ENTRYPOINT ["dotnet", "BoilerPlate.dll"]

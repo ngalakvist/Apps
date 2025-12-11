@@ -1,0 +1,298 @@
+using System;
+using System.Collections.Generic;
+
+public class HashTable<TKey, TValue>
+{
+    // A node in the linked list for handling collisions (separate chaining)
+    private class HashNode
+    {
+        public TKey Key { get; }
+        public TValue Value { get; set; }
+        public HashNode Next { get; set; }
+
+        public HashNode(TKey key, TValue value)
+        {
+            Key = key;
+            Value = value;
+            Next = null;
+        }
+    }
+
+    private HashNode[] _buckets;
+    private int _size; // Number of key-value pairs
+    private int _capacity; // Size of the _buckets array
+    private const double LoadFactorThreshold = 0.75;
+
+    public int Count => _size;
+
+    /// <summary>
+    /// Gets or sets the value associated with the specified key.
+    /// </summary>
+    /// <exception cref="KeyNotFoundException">Thrown from the getter if the key is not found.</exception>
+    public TValue this[TKey key]
+    {
+        get => Get(key);
+        set => AddOrUpdate(key, value);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the HashTable class.
+    /// </summary>
+    /// <param name="initialCapacity">The initial number of buckets.</param>
+    public HashTable(int initialCapacity = 16)
+    {
+        if (initialCapacity < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(initialCapacity), "Capacity must be a positive number.");
+        }
+        _capacity = initialCapacity;
+        _buckets = new HashNode[_capacity];
+        _size = 0;
+    }
+
+    /// <summary>
+    /// Calculates the bucket index for a given key.
+    /// </summary>
+    private int GetBucketIndex(TKey key)
+    {
+        // GetHashCode() can return negative values.
+        // The bitwise AND with 0x7FFFFFFF ensures the value is non-negative.
+        int hashCode = key.GetHashCode() & 0x7FFFFFFF;
+        return hashCode % _capacity;
+    }
+
+    /// <summary>
+    /// Adds a key-value pair to the hash table. Throws if key already exists.
+    /// </summary>
+    /// <exception cref="ArgumentException">If the key already exists.</exception>
+    public void Add(TKey key, TValue value)
+    {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        int bucketIndex = GetBucketIndex(key);
+        HashNode head = _buckets[bucketIndex];
+
+        // Check if key already exists in the chain
+        HashNode currentNode = head;
+        while (currentNode != null)
+        {
+            if (currentNode.Key.Equals(key))
+            {
+                throw new ArgumentException($"An item with the same key '{key}' has already been added.");
+            }
+            currentNode = currentNode.Next;
+        }
+
+        // If we got here, the key doesn't exist, so we can add it.
+        AddOrUpdate(key, value);
+    }
+
+    /// <summary>
+    /// Adds a key-value pair to the hash table or updates the value if the key already exists.
+    /// This is used by the indexer.
+    /// </summary>
+    private void AddOrUpdate(TKey key, TValue value)
+    {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        // Check if we need to resize the table
+        if ((double)_size / _capacity >= LoadFactorThreshold)
+        {
+            Resize();
+        }
+
+        int bucketIndex = GetBucketIndex(key);
+        HashNode head = _buckets[bucketIndex];
+
+        // Check if key already exists in the chain
+        HashNode currentNode = head;
+        while (currentNode != null)
+        {
+            if (currentNode.Key.Equals(key))
+            {
+                // If key exists, update the value and return
+                currentNode.Value = value;
+                return;
+            }
+            currentNode = currentNode.Next;
+        }
+
+        // If key doesn't exist, add a new node to the front of the chain
+        _size++;
+        HashNode newNode = new HashNode(key, value);
+        newNode.Next = head;
+        _buckets[bucketIndex] = newNode;
+    }
+
+    /// <summary>
+    /// Gets the value associated with the specified key.
+    /// </summary>
+    /// <returns>The value associated with the key.</returns>
+    /// <exception cref="KeyNotFoundException">If the key is not found.</exception>
+    public TValue Get(TKey key)
+    {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        int bucketIndex = GetBucketIndex(key);
+        HashNode currentNode = _buckets[bucketIndex];
+
+        while (currentNode != null)
+        {
+            if (currentNode.Key.Equals(key))
+            {
+                return currentNode.Value;
+            }
+            currentNode = currentNode.Next;
+        }
+
+        throw new KeyNotFoundException($"The key '{key}' was not found in the hash table.");
+    }
+
+    /// <summary>
+    /// Tries to get the value associated with the specified key.
+    /// </summary>
+    /// <returns>True if the key was found, otherwise false.</returns>
+    public bool TryGetValue(TKey key, out TValue value)
+    {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        int bucketIndex = GetBucketIndex(key);
+        HashNode currentNode = _buckets[bucketIndex];
+
+        while (currentNode != null)
+        {
+            if (currentNode.Key.Equals(key))
+            {
+                value = currentNode.Value;
+                return true;
+            }
+            currentNode = currentNode.Next;
+        }
+
+        value = default(TValue);
+        return false;
+    }
+
+    /// <summary>
+    /// Removes the key-value pair with the specified key.
+    /// </summary>
+    /// <returns>True if the element is successfully found and removed; otherwise, false.</returns>
+    public bool Remove(TKey key)
+    {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        int bucketIndex = GetBucketIndex(key);
+        HashNode head = _buckets[bucketIndex];
+        HashNode prevNode = null;
+
+        HashNode currentNode = head;
+        while (currentNode != null)
+        {
+            if (currentNode.Key.Equals(key))
+            {
+                // If the node to remove is the head of the chain
+                if (prevNode == null)
+                {
+                    _buckets[bucketIndex] = currentNode.Next;
+                }
+                else
+                {
+                    prevNode.Next = currentNode.Next;
+                }
+                _size--;
+                return true;
+            }
+            prevNode = currentNode;
+            currentNode = currentNode.Next;
+        }
+
+        return false; // Key not found
+    }
+
+    /// <summary>
+    /// Doubles the capacity of the hash table and rehashes all existing entries.
+    /// </summary>
+    private void Resize()
+    {
+        HashNode[] oldBuckets = _buckets;
+        _capacity *= 2;
+        _buckets = new HashNode[_capacity];
+        _size = 0; // Reset size, as AddOrUpdate will increment it
+
+        // Rehash all existing nodes into the new, larger bucket array
+        foreach (HashNode headNode in oldBuckets)
+        {
+            HashNode currentNode = headNode;
+            while (currentNode != null)
+            {
+                // Use the private AddOrUpdate to avoid checking for existing keys again
+                AddOrUpdate(currentNode.Key, currentNode.Value);
+                currentNode = currentNode.Next;
+            }
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        // Create a new hash table
+        var myHashTable = new HashTable<string, int>();
+
+        // Add some key-value pairs using the indexer
+        Console.WriteLine("Adding items using the indexer...");
+        myHashTable["apple"] = 5;
+        myHashTable["banana"] = 8;
+        myHashTable["cherry"] = 12;
+        Console.WriteLine($"Current count: {myHashTable.Count}"); // Output: 3
+
+        // Retrieve a value using the indexer
+        Console.WriteLine("\nGetting values using the indexer...");
+        int appleCount = myHashTable["apple"];
+        Console.WriteLine($"Count of apples: {appleCount}"); // Output: 5
+
+        // Update an existing value using the indexer
+        Console.WriteLine("\nUpdating 'banana' count using the indexer...");
+        myHashTable["banana"] = 10;
+        Console.WriteLine($"New count of bananas: {myHashTable["banana"]}"); // Output: 10
+        Console.WriteLine($"Current count is still: {myHashTable.Count}"); // Output: 3
+
+        // Use TryGetValue for safer retrieval
+        Console.WriteLine("\nUsing TryGetValue...");
+        if (myHashTable.TryGetValue("cherry", out int cherryCount))
+        {
+            Console.WriteLine($"Found cherries: {cherryCount}"); // Output: 12
+        }
+
+        // Remove an item
+        Console.WriteLine("\nRemoving 'apple'...");
+        myHashTable.Remove("apple");
+        Console.WriteLine($"Current count: {myHashTable.Count}"); // Output: 2
+
+        // Try to get a removed item using the indexer (will throw an exception)
+        try
+        {
+            var count = myHashTable["apple"];
+        }
+        catch (KeyNotFoundException ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

@@ -1,0 +1,41 @@
+ ***String interpolation***
+
+Developers have been doing it for a long time. Because of:
+
+Simplicity.
+Single-string logs are straightforward. Easy to implement and easy to read. 
+Almost all of logging libraries support single-stringing out of the box.
+Developers can quickly add such logs to a method using placeholders for variables.
+
+Human-Readability.
+Logs in a single-string format are often human-readable at a glance. 
+As we can see in the example, they are usually simple sentences.
+
+Legacy. 
+ In legacy systems or environments, it may be not necessary or even impossible to change existed single-string logs. So,
+ the side-systems may use the same approach in order to unify the whole system.
+
+
+***Structured logging(templating)***
+
+Context-informative. 
+Allows you to include additional data along with the log message. 
+This can provide more context to the log entry, for example user Id, request Id, app version and so on, making it easier to understand and analyze.
+  
+Machine-readable: 
+As long as logs now objects with properties, they are machine-readable, 
+which is extremely beneficial when you’re dealing with large volumes of logs and want to process them programmatically or with aggregation tools.
+
+Searchable and filterable.
+It becomes easier to search and filter logs based on specific criteria. 
+There are lot of apps is being used for that. 
+This is particularly valuable when dealing with distributed systems and microservices.
+
+Enhanced-analyzable. 
+'Structured logs are usually stored in some db.
+Which give us ability to do more sophisticated analysis.
+Tools can extract information from the structured data easy, without parsing.
+
+Consistency.
+Structured logging encourages a consistent format for logs across different parts of the application, 
+making it easier to correlate information and trace issues.
