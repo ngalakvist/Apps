@@ -107,7 +107,7 @@ namespace AlgorithmMaster.Examples
             foreach (string pattern in patterns)
             {
                 bool matches = StringTemplate.IsMatch(input, pattern);
-                Console.WriteLine($\"\"{input}\" matches pattern \"{pattern}\": {matches}\");
+                Console.WriteLine($"\"{input}\" matches pattern \"{pattern}\": {matches}");
             }
 
             Console.WriteLine();
@@ -121,13 +121,13 @@ namespace AlgorithmMaster.Examples
             // String compression
             string compressed = "aaabbbcccddd";
             string compressedResult = StringTemplate.CompressString(compressed);
-            Console.WriteLine($\"Compression of \"{compressed}\": \"{compressedResult}\"\");
+            Console.WriteLine($"Compression of \"{compressed}\": \"{compressedResult}\"");
 
             // String multiplication (large number multiplication)
             string num1 = "123";
             string num2 = "456";
             string product = StringTemplate.MultiplyStrings(num1, num2);
-            Console.WriteLine($\"\"{num1}\" × \"{num2}\" = \"{product}\"\");
+            Console.WriteLine($"\"\"{num1}\" × \"{num2}\" = \"{product}\"\"");
 
             // Character frequency analysis
             string analysisText = "algorithm patterns";

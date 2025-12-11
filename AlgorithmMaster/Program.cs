@@ -1,10 +1,9 @@
+using AlgorithmMaster.Examples;
+using AlgorithmMaster.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AlgorithmMaster.Examples;
-using AlgorithmMaster.Templates;
-using AlgorithmMaster.Utils;
 
 namespace AlgorithmMaster
 {
@@ -36,16 +35,16 @@ namespace AlgorithmMaster
             {
                 Console.WriteLine("Available Categories:");
                 Console.WriteLine();
-                
+
                 for (int i = 0; i < examples.Count; i++)
                 {
                     Console.WriteLine($"  {i + 1}. {examples.ElementAt(i).Key}");
                 }
-                
+
                 Console.WriteLine($"  {examples.Count + 1}. Exit");
                 Console.WriteLine();
                 Console.Write("Select a category (number): ");
-                
+
                 if (int.TryParse(Console.ReadLine(), out int choice))
                 {
                     if (choice >= 1 && choice <= examples.Count)
@@ -69,7 +68,7 @@ namespace AlgorithmMaster
                 {
                     Console.WriteLine("Invalid input. Please enter a number.");
                 }
-                
+
                 Console.WriteLine();
             }
 
